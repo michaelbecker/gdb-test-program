@@ -1,42 +1,51 @@
 #include <stdio.h>
 #include "dlist.h"
-#include "gdb-test-program.h"
+#include "gdb_test.h"
 
 
-int ReceiveMessage(void)
+/*
+ *  We decided that we are going to receive our messages here.
+ */
+void ReceiveMessage(void)
 {
-    MessagePacket_t *Message;
+    /************************/
+    MessagePacket_t *message;
+    DlNode_t *node;
+    /************************/
 
-    Message = DlRemoveNodeFromTail(&MessageHead);
-    if (Message)
-        return Message->Data;
-    else
-        return -1;
+    node = DlRemoveNodeFromTail(&MessageHead);
+
+    message = CONTAINING_RECORD(node, MessagePacket_t, Node);
+
+    if (node) {
+        printf("  data1 = 0x%04x\n", message->Data1);
+        printf("  data2 = 0x%04x\n\n", message->Data2);
+    }
+    else {
+        printf("No Message found!\n");
+    }
 }
 
 
+/*
+ *  Main
+ */
 int main(void)
 {
-    //---------------
-    int message; 
-    //---------------
-
-    printf("GDB Test program running...\n");
+    printf("GDB Test program running...\n\n");
 
     DlInitHead(&MessageHead);
 
-    SendMessage(123);
-    SendMessage(456);
-    SendMessage(789);
+    SendMessage(0x1111, 0x2222);
+    SendMessage(0x3333, 0x4444);
+    SendMessage(0x5555, 0x6666);
+    PrintMessageList();
 
-    message = ReceiveMessage();
-    printf("message = %d\n");
-
-    message = ReceiveMessage();
-    printf("message = %d\n");
-
-    message = ReceiveMessage();
-    printf("message = %d\n");
+    ReceiveMessage();
+    ReceiveMessage();
+    ReceiveMessage();
+    ReceiveMessage();
 
     return 0;
 }
+

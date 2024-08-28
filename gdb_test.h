@@ -3,15 +3,21 @@
 
 #include "dlist.h"
 
+/*
+ *  This is the message structure we are sending.
+ */
 typedef struct MessagePacket_t_ {
-
+    
+    short int Data1;
     DlNode_t Node;
-    int Data;
+    short int Data2;
 
 }MessagePacket_t;
 
 
 extern DlNode_t MessageHead;
+void SendMessage(int data1, int data2);
+void PrintMessageList(void);
 
 
 #endif
